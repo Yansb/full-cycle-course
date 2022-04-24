@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 	"fmt"
+	"io"
+	"log"
 	"time"
 
 	"github.com/yansb/gRPC/pb"
@@ -59,4 +61,48 @@ func (*UserService) AddUserVerbose(req *pb.User, stream pb.UserService_AddUserVe
 	time.Sleep(time.Second * 3)
 
 	return nil
+}
+
+func (*UserService) AddUsers(stream pb.UserService_AddUsersServer) error {
+	users := []*pb.User{}
+
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return stream.SendAndClose(&pb.Users{User: users})
+		}
+		if err != nil {
+			log.Fatalf("Error receiving stream: %v", err)
+		}
+
+		users = append(users, &pb.User{
+			Id:    req.GetId(),
+			Name:  req.GetName(),
+			Email: req.GetEmail(),
+		})
+
+		fmt.Println("Adding", req.GetName())
+	}
+}
+
+func (*UserService) AddUserStreamBoth(stream pb.UserService_AddUserStreamBothServer) error {
+
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			log.Fatalf("Error reading stream: %v", err)
+		}
+
+		err = stream.Send(&pb.UserResultStream{
+			Status: "Added",
+			User:   req,
+		})
+		if err != nil {
+			log.Fatalf("Error sending stream to client: %v", err)
+		}
+	}
+
 }

@@ -13,7 +13,13 @@ message UserResultStream {
   User user = 2;
 }
 
+message Users {
+  repeated User user = 1;
+}
+
 service UserService {
   rpc AddUser (User) returns (User);
   rpc AddUserVerbose (User) returns (stream UserResultStream);
+  rpc AddUsers (stream User) returns (Users);
+  rpc AddUserStreamBoth (stream User) returns (stream UserResultStream);
 }
