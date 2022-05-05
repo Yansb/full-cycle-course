@@ -18,6 +18,10 @@ export class Product{
     return this._price;
   }
 
+  get id() {
+    return this._id;
+  }
+
   validate() {
     if(this._id.length === 0){
       throw new Error("Id is required")
