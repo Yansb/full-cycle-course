@@ -66,7 +66,7 @@ describe("Customer repository test", () => {
     });
   });
 
-  it("should find a costumer", async () => {
+  it("should find a customer", async () => {
     const customerRepository = new CustomerRepository();
     const customer = new Customer("1", "John");
     const address = new Address("street", 1, "zipcode 1", "city 1");

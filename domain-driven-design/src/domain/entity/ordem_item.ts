@@ -23,7 +23,7 @@ export class OrderItem{
   }
 
   get price(): number{
-    return this._price * this._quantity;
+    return this._price;
   }
 
   get name(): string{
@@ -34,4 +34,7 @@ export class OrderItem{
     return this._productId;
   }
 
+  get subTotalPrice(): number{
+    return this._price * this._quantity;
+  }
 }

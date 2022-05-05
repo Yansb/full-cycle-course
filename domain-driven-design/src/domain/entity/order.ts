@@ -42,8 +42,17 @@ export class Order{
     return true;
   }
 
+  addItems(items: OrderItem[]){
+    if(this._items.length > items.length){
+      throw new Error("You are subtracting items")
+    }
+
+    this._items = items;
+    this._total = this.total();
+  }
+
   total(): number{
-    return this._items.reduce((acc, item) => acc + item.price, 0)
+    return this._items.reduce((acc, item) => acc + item.subTotalPrice, 0)
   }
 
 }
