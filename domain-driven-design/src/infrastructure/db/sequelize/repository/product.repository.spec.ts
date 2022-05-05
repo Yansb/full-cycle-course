@@ -1,6 +1,6 @@
 import {Sequelize} from "sequelize-typescript"
-import { Product } from "../../domain/entity/product";
-import { ProductModel } from "../db/sequelize/model/product.model";
+import { Product } from "../../../../domain/entity/product";
+import { ProductModel } from "../model/product.model";
 import { ProductRepository } from "./product.repository";
 
 describe("Product repository test", () => {
@@ -10,6 +10,8 @@ describe("Product repository test", () => {
     sequelize = new Sequelize({
       dialect: "sqlite",
       storage: ":memory:",
+      logging: false,
+      sync: {force: true}
     })
 
     sequelize.addModels([ProductModel])
