@@ -1,3 +1,6 @@
+import { CustomerCreatedEvent } from "../customer/customer-created.event";
+import { EnviaConsoleLog1Handler } from "../customer/handler/envia-console-log1.handler";
+import { EnviaConsoleLog2Handler } from "../customer/handler/envia-console-log2.handler";
 import { SendEmailWhenProductIsCreatedHandler } from "../product/handler/send-email-when-product-is-created.handler";
 import { ProductCreatedEvent } from "../product/product-created.event";
 import { EventDispatcher } from "./event-dispatcher";
@@ -33,15 +36,19 @@ describe("Domain events tests", () => {
 
   it("should unregister all event handlers", () => {
     const eventDispatcher = new EventDispatcher();
+    const consoleHandler = new EnviaConsoleLog1Handler();
     const eventHandler = new SendEmailWhenProductIsCreatedHandler();
 
     eventDispatcher.register("ProductCreatedEvent", eventHandler)
+    eventDispatcher.register("CustomerCreatedEvent", consoleHandler)
 
     expect(eventDispatcher.getEventsHandler.ProductCreatedEvent[0]).toMatchObject(eventHandler);
+    expect(eventDispatcher.getEventsHandler.CustomerCreatedEvent[0]).toMatchObject(consoleHandler);
 
     eventDispatcher.unregisterAll()
 
     expect(eventDispatcher.getEventsHandler["ProductCreatedEvent"]).toBeUndefined();
+    expect(eventDispatcher.getEventsHandler["CustomerCreatedEvent"]).toBeUndefined()
 
   })
 
@@ -66,5 +73,56 @@ describe("Domain events tests", () => {
     expect(spyEventHandler).toHaveBeenCalledTimes(1);
     expect(spyEventHandler).toHaveBeenCalledWith(productCreatedEvent);
 
+  })
+
+  it("should register customer handler", () => {
+    const eventDispatcher = new EventDispatcher();
+    const eventHandler = new EnviaConsoleLog1Handler();
+
+    eventDispatcher.register("CustomerCreatedEvent", eventHandler)
+
+    expect(eventDispatcher.getEventsHandler).toHaveProperty("CustomerCreatedEvent");
+    expect(eventDispatcher.getEventsHandler.CustomerCreatedEvent.length).toBe(1);
+    expect(eventDispatcher.getEventsHandler.CustomerCreatedEvent[0]).toMatchObject(eventHandler);
+  })
+  
+  it("should unregister customer handler", () => {
+    const eventDispatcher = new EventDispatcher();
+    const eventHandler = new EnviaConsoleLog1Handler();
+
+    eventDispatcher.register("CustomerCreatedEvent", eventHandler)
+
+    expect(eventDispatcher.getEventsHandler.CustomerCreatedEvent[0]).toMatchObject(eventHandler);
+
+    eventDispatcher.unregister("CustomerCreatedEvent", eventHandler)
+
+    expect(eventDispatcher.getEventsHandler.CustomerCreatedEvent.length).toBe(0);
+    expect(eventDispatcher.getEventsHandler.CustomerCreatedEvent[0]).toBeUndefined();
+  })
+
+  it("should notify all event handlers", () => {
+    const eventDispatcher = new EventDispatcher();
+    const eventHandler = new EnviaConsoleLog1Handler();
+    const eventHandler2 = new EnviaConsoleLog2Handler();
+    const spyEventHandler = jest.spyOn(eventHandler, "handle");
+    const spyEventHandler2 = jest.spyOn(eventHandler2, "handle");
+
+    eventDispatcher.register("CustomerCreatedEvent", eventHandler)
+    eventDispatcher.register("CustomerCreatedEvent", eventHandler2)
+
+    expect(eventDispatcher.getEventsHandler.CustomerCreatedEvent[0]).toMatchObject(eventHandler);
+
+    const customerCreatedEvent = new CustomerCreatedEvent({
+      id: 1,
+      name: "Customer 1",
+      active: false,
+    });
+
+    eventDispatcher.notify(customerCreatedEvent)
+    
+    expect(spyEventHandler).toHaveBeenCalledTimes(1);
+    expect(spyEventHandler).toHaveBeenCalledWith(customerCreatedEvent);
+    expect(spyEventHandler2).toHaveBeenCalledTimes(1);
+    expect(spyEventHandler2).toHaveBeenCalledWith(customerCreatedEvent);
   })
 })
