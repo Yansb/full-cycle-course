@@ -11,7 +11,7 @@ describe("Customer factory unit test", () => {
   })
 
   it("should create a customer with an address", () => {
-    const address = new Address("Rua secreta", 123, "any zip", "salvador" );
+    const address = new Address("Rua 123", 123, "any zip", "salvador" );
     let customer = CustomerFactory.createWithAddress("John", address )
     
     expect(customer.id).toBeDefined();
