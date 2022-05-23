@@ -52,3 +52,7 @@ func TestProductDb_Get(t *testing.T) {
 	require.Equal(t, float64(0), product.GetPrice())
 	require.Equal(t, "disabled", product.GetStatus())
 }
+
+func TestProductDb_Save(t *testing.T) {
+
+}
