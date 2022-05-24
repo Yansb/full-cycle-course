@@ -1,7 +1,6 @@
 package application_test
 
 import (
-	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -26,10 +25,6 @@ func TestProductService_Get(t *testing.T) {
 	result, err := service.Get("id")
 	require.Nil(t, err)
 	require.Equal(t, product, result)
-
-	persistence.EXPECT().Get(gomock.Any()).Return(nil, errors.New("Product not found")).AnyTimes()
-	_, err = service.Get("id")
-	require.Equal(t, "Product not found", err.Error())
 }
 
 func TestProductService_Create(t *testing.T) {
