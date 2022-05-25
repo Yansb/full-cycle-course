@@ -1,5 +1,7 @@
 package application
 
+import "fmt"
+
 type ProductService struct {
 	Persistence ProductPersistenceInterface
 }
@@ -39,7 +41,7 @@ func (s *ProductService) Enable(product ProductInterface) (ProductInterface, err
 	if err != nil {
 		return &Product{}, err
 	}
-
+	fmt.Println("product.Enable()")
 	result, err := s.Persistence.Save(product)
 	if err != nil {
 		return &Product{}, err
