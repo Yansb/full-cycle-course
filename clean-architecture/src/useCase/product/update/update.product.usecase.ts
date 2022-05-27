@@ -7,7 +7,7 @@ export class UpdateProductUseCase{
 
   async execute(input: InputUpdateProductDto): Promise<OutputUpdateProductDto>{
     const product = new Product(input.id, input.name, input.price);
-    await this.productRepository.create(product);
+    await this.productRepository.update(product);
 
     return {
       id: product.id,
