@@ -12,7 +12,7 @@ export class CustomerRepository implements CustomerRepositoryInterface{
       rewardPoints: entity.rewardPoints,
       street: entity.address.street,
       number: entity.address.number,
-      zipcode: entity.address.zipcode,
+      zipcode: entity.address.zip,
       city: entity.address.city
     })
   }
@@ -24,7 +24,7 @@ export class CustomerRepository implements CustomerRepositoryInterface{
       rewardPoints: entity.rewardPoints,
       street: entity.address.street,
       number: entity.address.number,
-      zipcode: entity.address.zipcode,
+      zipcode: entity.address.zip,
       city: entity.address.city
       },{
       where:{

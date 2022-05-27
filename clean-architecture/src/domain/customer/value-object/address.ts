@@ -1,13 +1,13 @@
 export class Address{
   _street: string = "";
   _number: number = 0;
-  _zipcode: string = "";
+  _zip: string = "";
   _city: string = "";
 
   constructor(street: string, number: number, zip: string, city: string){
     this._street = street;
     this._number = number;
-    this._zipcode = zip;
+    this._zip = zip;
     this._city = city;
 
     this.validate();
@@ -21,8 +21,8 @@ export class Address{
     return this._number
   }
 
-  get zipcode(){
-    return this._zipcode
+  get zip(){
+    return this._zip
   }
 
   get city(){
@@ -33,7 +33,7 @@ export class Address{
     if(this._city.length === 0){
       throw new Error("city is required")
     }
-    if(this._zipcode.length === 0){
+    if(this.zip.length === 0){
       throw new Error("zip is required")
     }
     if(this._number === 0){
