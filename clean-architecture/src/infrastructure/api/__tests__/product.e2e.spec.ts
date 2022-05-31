@@ -12,6 +12,30 @@ describe("E2E test for customer", () => {
     await sequelize.close()
   })
 
+  it("should create product", async () => {
+    const response = await request(app)
+      .post("/product")
+      .send({
+        name: "Product 1",
+        price: 123,
+        type: "a"
+      });
+
+    expect(response.status).toBe(201)
+    expect(response.body.name).toBe("Product 1")
+    expect(response.body.price).toBe(123)
+  })
+
+  it("should return error 500 ", async () => {
+    const response = await request(app)
+    .post("/product")
+    .send({
+      name: "Product 1",
+    });
+
+    expect(response.status).toBe(500)
+  })
+
   it("should list products", async () => {
     await request(app)
     .post("/product")
