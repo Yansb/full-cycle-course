@@ -32,7 +32,6 @@ describe("E2E test for customer", () => {
     const response = await request(app)
     .get("/product")
 
-    console.log(response.body)
     expect(response.status).toBe(200)
     expect(response.body).toBeDefined()
     expect(response.body.products.length).toBe(2)
