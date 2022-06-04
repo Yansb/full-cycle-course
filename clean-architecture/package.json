@@ -14,7 +14,8 @@
     "sequelize": "^6.19.0",
     "sqlite3": "^5.0.6",
     "typescript": "^4.6.4",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
