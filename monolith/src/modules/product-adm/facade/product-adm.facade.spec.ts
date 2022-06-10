@@ -47,4 +47,31 @@ describe("ProductFacadeAdmTest", () => {
     expect(product.description).toEqual(input.description)
   })
 
+  it("should check stock from product", async () => {
+    const productRepository = new ProductRepository()
+
+    const productFacade = ProductAdmFacadeFactory.create()
+
+    const input: AddProductFacadeInputDto = {
+      id: "1",
+      name: "Product 1",
+      description: "Description 1",
+      purchasePrice: 1,
+      stock: 10,
+    }
+
+    await productFacade.addProduct(input)
+
+    const findStockFacade = ProductAdmFacadeFactory.findStock()
+
+    const stock = await findStockFacade.checkStock({
+      productId: input.id
+    })
+
+    expect(stock.productId).toEqual("1")
+    expect(stock.stock).toEqual(10)
+
+
+  })
+
 })
