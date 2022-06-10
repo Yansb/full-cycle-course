@@ -1,5 +1,5 @@
-
-import { uuid} from 'uuid';
+//@ts-ignore
+import { v4 as uuid } from "uuid"
 
 import {ValueObject} from './value-object.interface';
 
@@ -11,6 +11,6 @@ export class Id implements ValueObject {
   }
 
   get id(): string {
-    return this._id
+           return this._id
   }
 }
