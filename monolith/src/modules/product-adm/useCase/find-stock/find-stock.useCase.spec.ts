@@ -20,6 +20,7 @@ describe("FindStockUseCase",  () => {
 
     const response = await useCase.execute(input)
 
+    expect(mockRepository.find).toHaveBeenCalled()
     expect(response).toEqual({
       productId: "1",
       stock: 10,

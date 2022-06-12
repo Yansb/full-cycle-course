@@ -62,9 +62,7 @@ describe("ProductFacadeAdmTest", () => {
 
     await productFacade.addProduct(input)
 
-    const findStockFacade = ProductAdmFacadeFactory.findStock()
-
-    const stock = await findStockFacade.checkStock({
+    const stock = await productFacade.checkStock({
       productId: input.id
     })
 
