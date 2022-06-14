@@ -39,4 +39,28 @@ describe("Store catalog facade", () => {
     expect(result.salesPrice).toBe(100);
 
   })
+
+  it("should find all products", async () => {
+    const facade = StoreCatalogFacadeFactory.create();
+
+    await ProductModel.create({
+      id: "1",
+      name: "Product 1",
+      description: "Description 1",
+      salesPrice: 100,
+    })
+    await ProductModel.create({
+      id: "2",
+      name: "Product 2",
+      description: "Description 2",
+      salesPrice: 200,
+    })
+
+    const {products} = await facade.findAll()
+
+    expect(products).toHaveLength(2);
+    expect(products[0].id).toBe("1");
+    expect(products[1].id).toBe("2");
+
+  })
 })
