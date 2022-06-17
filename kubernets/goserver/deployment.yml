@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goserver
+spec: 
+  replicas: 10
+  selector:
+    matchLabels:
+      name: goserver
+  template:
+    metadata:
+      labels:
+        name: goserver
+    spec:
+      containers:
+      - name: goserver
+        image: yansb/goserver:latest
+        ports:
+        - containerPort: 80
