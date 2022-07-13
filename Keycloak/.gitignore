@@ -1,1 +1,4 @@
-.idea/
+.idea
+.docker
+mytheme/*
+!.gitkeep
