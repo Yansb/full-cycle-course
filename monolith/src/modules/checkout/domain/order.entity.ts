@@ -19,7 +19,14 @@ export class Order extends BaseEntity {
     super(props.id);
     this._client = props.client;
     this._products = props.products;
-    this._status = props.status || 'pendin g';
+    this._status = props.status || 'pending';
+  }
+
+  approve(): void {
+    if(this.products.length <= 0){
+      throw new Error('No products selected');
+    }
+    this._status = 'approved';
   }
 
   get client(): Client {
