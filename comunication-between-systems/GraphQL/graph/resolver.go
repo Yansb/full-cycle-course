@@ -1,13 +1,12 @@
 package graph
 
-import "github.com/yansb/GraphQL/graph/model"
+import "github.com/yansb/full-cycle-course/comunication-between-systems/GraphQL/internal/database"
 
 // This file will not be regenerated automatically.
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	Categories []*model.Category
-	Courses    []*model.Course
-	Chapters   []*model.Chapter
+	CategoryDB *database.Category
+	CourseDB   *database.Course
 }
