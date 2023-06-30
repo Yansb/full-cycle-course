@@ -47,15 +47,14 @@ func (a *AccountDB) FindByID(id string) (*entity.Account, error) {
 }
 
 func (a *AccountDB) Save(account *entity.Account) error {
-	stmt, err := a.DB.Prepare(`INSERT INTO accounts (id, client_id, balance, created_at) VALUES (?, ?, ?, ?)`)
+	stmt, err := a.DB.Prepare("INSERT INTO accounts (id, client_id, balance, created_at) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
-
+	defer stmt.Close()
 	_, err = stmt.Exec(account.ID, account.Client.ID, account.Balance, account.CreatedAt)
 	if err != nil {
 		return err
 	}
-
 	return nil
 }

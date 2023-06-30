@@ -1,4 +1,4 @@
-package createclient_test
+package create_client_test
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/yansb/full-cycle-course/walletcore/internal/entity"
-	createclient "github.com/yansb/full-cycle-course/walletcore/internal/use_case/create_client"
+	"github.com/yansb/full-cycle-course/walletcore/internal/use_case/create_client"
 )
 
 type ClientGatewayMock struct {
@@ -26,9 +26,9 @@ func (m *ClientGatewayMock) Save(client *entity.Client) error {
 func TestCreateClientUseCase_Execute(t *testing.T) {
 	mockClientGateway := &ClientGatewayMock{}
 	mockClientGateway.On("Save", mock.Anything).Return(nil)
-	uc := createclient.NewCreateClientUseCase(mockClientGateway)
+	uc := create_client.NewCreateClientUseCase(mockClientGateway)
 
-	output, err := uc.Execute(createclient.CreateClientInputDTO{
+	output, err := uc.Execute(create_client.CreateClientInputDTO{
 		Name:  "John Doe",
 		Email: "j@j",
 	})

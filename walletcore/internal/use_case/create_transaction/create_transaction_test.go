@@ -1,12 +1,15 @@
-package createtransaction_test
+package create_transaction_test
 
 import (
 	"testing"
 
+	"github.com/yansb/full-cycle-course/walletcore/internal/event"
+	"github.com/yansb/full-cycle-course/walletcore/pkg/events"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/yansb/full-cycle-course/walletcore/internal/entity"
-	createtransaction "github.com/yansb/full-cycle-course/walletcore/internal/use_case/create_transaction"
+	"github.com/yansb/full-cycle-course/walletcore/internal/use_case/create_transaction"
 )
 
 type TransactionGatewayMock struct {
@@ -47,13 +50,16 @@ func TestCreateTransactionUseCase_Execute(t *testing.T) {
 	mockTransaction := &TransactionGatewayMock{}
 	mockTransaction.On("Create", mock.Anything).Return(nil)
 
-	inputDto := createtransaction.CreateTransactionInputDTO{
+	inputDto := create_transaction.CreateTransactionInputDTO{
 		AccountIDFrom: account1.ID,
 		AccountIDTo:   account2.ID,
 		Amount:        100,
 	}
 
-	uc := createtransaction.NewCreateTransactionUseCase(mockTransaction, mockAccount)
+	dispatcher := events.NewEventDispatcher()
+	event := event.NewTransactionCreated()
+
+	uc := create_transaction.NewCreateTransactionUseCase(mockTransaction, mockAccount, dispatcher, event)
 
 	output, err := uc.Execute(inputDto)
 	assert.Nil(t, err)

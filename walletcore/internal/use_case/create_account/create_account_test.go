@@ -1,4 +1,4 @@
-package createaccount_test
+package create_account_test
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/yansb/full-cycle-course/walletcore/internal/entity"
-	createaccount "github.com/yansb/full-cycle-course/walletcore/internal/use_case/create_account"
+	"github.com/yansb/full-cycle-course/walletcore/internal/use_case/create_account"
 )
 
 type ClientGatewayMock struct {
@@ -45,8 +45,8 @@ func TestCreateAccountUseCase_Execute(t *testing.T) {
 	accountMock := &AccountGatewayMock{}
 	accountMock.On("Save", mock.Anything).Return(nil)
 
-	uc := createaccount.NewCreateAccountUseCase(accountMock, clientMock)
-	inputDto := createaccount.CreateAccountInputDTO{
+	uc := create_account.NewCreateAccountUseCase(accountMock, clientMock)
+	inputDto := create_account.CreateAccountInputDTO{
 		ClientID: client.ID,
 	}
 	output, err := uc.Execute(inputDto)

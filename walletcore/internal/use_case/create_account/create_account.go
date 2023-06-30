@@ -1,4 +1,4 @@
-package createaccount
+package create_account
 
 import (
 	"github.com/yansb/full-cycle-course/walletcore/internal/entity"
@@ -6,7 +6,7 @@ import (
 )
 
 type CreateAccountInputDTO struct {
-	ClientID string
+	ClientID string `json:"client_id"`
 }
 
 type CreateAccountOutputDTO struct {

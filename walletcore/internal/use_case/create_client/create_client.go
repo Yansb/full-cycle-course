@@ -1,4 +1,4 @@
-package createclient
+package create_client
 
 import (
 	"time"
