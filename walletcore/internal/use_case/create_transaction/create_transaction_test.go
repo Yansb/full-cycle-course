@@ -1,6 +1,7 @@
 package create_transaction_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/yansb/full-cycle-course/walletcore/internal/event"
@@ -10,29 +11,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/yansb/full-cycle-course/walletcore/internal/entity"
 	"github.com/yansb/full-cycle-course/walletcore/internal/use_case/create_transaction"
+	"github.com/yansb/full-cycle-course/walletcore/internal/use_case/mocks"
 )
-
-type TransactionGatewayMock struct {
-	mock.Mock
-}
-type AccountGatewayMock struct {
-	mock.Mock
-}
-
-func (m *AccountGatewayMock) Save(account *entity.Account) error {
-	args := m.Called(account)
-	return args.Error(0)
-}
-
-func (m *AccountGatewayMock) FindByID(id string) (*entity.Account, error) {
-	args := m.Called(id)
-	return args.Get(0).(*entity.Account), args.Error(1)
-}
-
-func (m *TransactionGatewayMock) Create(transaction *entity.Transaction) error {
-	args := m.Called(transaction)
-	return args.Error(0)
-}
 
 func TestCreateTransactionUseCase_Execute(t *testing.T) {
 	client1, _ := entity.NewClient("John Doe", "j@j")
@@ -43,12 +23,8 @@ func TestCreateTransactionUseCase_Execute(t *testing.T) {
 	account2 := entity.NewAccount(client2)
 	account2.Credit(1000)
 
-	mockAccount := &AccountGatewayMock{}
-	mockAccount.On("FindByID", account1.ID).Return(account1, nil)
-	mockAccount.On("FindByID", account2.ID).Return(account2, nil)
-
-	mockTransaction := &TransactionGatewayMock{}
-	mockTransaction.On("Create", mock.Anything).Return(nil)
+	mockUow := &mocks.UowMock{}
+	mockUow.On("Do", mock.Anything, mock.Anything).Return(nil)
 
 	inputDto := create_transaction.CreateTransactionInputDTO{
 		AccountIDFrom: account1.ID,
@@ -58,13 +34,12 @@ func TestCreateTransactionUseCase_Execute(t *testing.T) {
 
 	dispatcher := events.NewEventDispatcher()
 	event := event.NewTransactionCreated()
+	ctx := context.Background()
+	uc := create_transaction.NewCreateTransactionUseCase(mockUow, dispatcher, event)
 
-	uc := create_transaction.NewCreateTransactionUseCase(mockTransaction, mockAccount, dispatcher, event)
-
-	output, err := uc.Execute(inputDto)
+	output, err := uc.Execute(ctx, inputDto)
 	assert.Nil(t, err)
 	assert.NotNil(t, output.ID)
-	mockAccount.AssertExpectations(t)
-	mockTransaction.AssertExpectations(t)
-	mockAccount.AssertNumberOfCalls(t, "FindByID", 2)
+	mockUow.AssertExpectations(t)
+	mockUow.AssertNumberOfCalls(t, "Do", 1)
 }
