@@ -22,26 +22,37 @@ type CreateTransactionOutputDTO struct {
 	Amount        float64 `json:"amount"`
 }
 
+type BalanceUpdatedOutputDTO struct {
+	AccountIdFrom        string  `json:"account_id_from"`
+	AccountIdTo          string  `json:"account_id_to"`
+	BalanceAccountIdFrom float64 `json:"balance_account_id_from"`
+	BalanceAccountIdTo   float64 `json:"balance_account_id_to"`
+}
+
 type CreateTransactionUseCase struct {
 	Uow                uow.UowInterface
 	eventDispatcher    events.EventDispatcherInterface
 	transactionCreated events.EventInterface
+	balanceUpdated     events.EventInterface
 }
 
 func NewCreateTransactionUseCase(
 	Uow uow.UowInterface,
 	eventDispatcher events.EventDispatcherInterface,
 	transactionCreated events.EventInterface,
+	balanceUpdated events.EventInterface,
 ) *CreateTransactionUseCase {
 	return &CreateTransactionUseCase{
 		Uow:                Uow,
 		eventDispatcher:    eventDispatcher,
 		transactionCreated: transactionCreated,
+		balanceUpdated:     balanceUpdated,
 	}
 }
 
 func (uc *CreateTransactionUseCase) Execute(ctx context.Context, input CreateTransactionInputDTO) (*CreateTransactionOutputDTO, error) {
 	output := &CreateTransactionOutputDTO{}
+	balanceUpdatedOutput := &BalanceUpdatedOutputDTO{}
 
 	err := uc.Uow.Do(ctx, func(_ *uow.Uow) error {
 		accountRepository := uc.getAccountRepository(ctx)
@@ -79,6 +90,10 @@ func (uc *CreateTransactionUseCase) Execute(ctx context.Context, input CreateTra
 		output.AccountIdTo = input.AccountIDTo
 		output.Amount = input.Amount
 
+		balanceUpdatedOutput.AccountIdFrom = input.AccountIDFrom
+		balanceUpdatedOutput.AccountIdTo = input.AccountIDTo
+		balanceUpdatedOutput.BalanceAccountIdFrom = accountFrom.Balance
+		balanceUpdatedOutput.BalanceAccountIdTo = accountTo.Balance
 		return nil
 	})
 	if err != nil {
@@ -87,6 +102,9 @@ func (uc *CreateTransactionUseCase) Execute(ctx context.Context, input CreateTra
 
 	uc.transactionCreated.SetPayload(output)
 	uc.eventDispatcher.Dispatch(uc.transactionCreated)
+
+	uc.balanceUpdated.SetPayload(balanceUpdatedOutput)
+	uc.eventDispatcher.Dispatch(uc.balanceUpdated)
 
 	return output, err
 }
