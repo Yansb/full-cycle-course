@@ -16,11 +16,11 @@ spec:
     spec:
       containers:
         - name: goserver
-          image: "yansb/hello-go:v5"
-          # resources:
-          #   limits:
-          #     memory: "128Mi"
-          #     cpu: "500m"
+          image: "yansb/hello-go:v5.1"
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
           envFrom:
             - configMapRef:
                 name: goserver-env
