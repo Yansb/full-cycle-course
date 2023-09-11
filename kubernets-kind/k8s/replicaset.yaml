@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: ReplicaSet
 metadata:
   name: goserver
   labels:
@@ -10,10 +10,10 @@ spec:
       app: goserver
   replicas: 2
   template:
-    metadata: 
+    metadata:
       labels:
         app: "goserver"
     spec:
       containers:
-        - name: "goserver"
+        - name: goserver
           image: "yansb/hello-go:latest"
