@@ -16,14 +16,34 @@ spec:
     spec:
       containers:
         - name: goserver
-          image: "yansb/hello-go:v5.1"
+          image: "yansb/hello-go:v5.5"
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            periodSeconds: 3
+            failureThreshold: 1
+            initialDelaySeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            periodSeconds: 5
+            failureThreshold: 1
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            periodSeconds: 3
+            failureThreshold: 1
           resources:
             limits:
               memory: "128Mi"
               cpu: "500m"
           envFrom:
-            - configMapRef:
-                name: goserver-env
+            - secretRef:
+                name: goserver-secret
           volumeMounts:
             - mountPath: "/go/myfamily"
               name: config
