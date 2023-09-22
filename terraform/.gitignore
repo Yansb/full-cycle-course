@@ -1,5 +1,2 @@
 .terraform/
 .terraform.lock.hcl
-credenciais.txt
-terraform.tfstate
-terraform.tfstate.backup

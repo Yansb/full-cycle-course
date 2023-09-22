@@ -1,5 +1,5 @@
 resource "aws_vpc" "new-vpc" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block = var.vpc_cidr_block
   tags = {
     Name = "${var.prefix}-vpc"
   }
@@ -41,5 +41,4 @@ resource "aws_route_table_association" "new-rtb-association" {
   count          = var.subnets_quantity
   route_table_id = aws_route_table.new-rtb.id
   subnet_id      = aws_subnet.subnets.*.id[count.index]
-
 }
