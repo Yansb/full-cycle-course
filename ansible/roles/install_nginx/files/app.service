@@ -1,0 +1,9 @@
+[Service]
+WorkingDirectory=/app
+ExecStart=/app/my-app
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=my-app
+user=root
+group=root
